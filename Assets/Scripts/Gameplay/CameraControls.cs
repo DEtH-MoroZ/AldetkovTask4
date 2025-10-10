@@ -10,16 +10,25 @@ public class CameraControls : MonoBehaviour
     public float speed = 10f;
     public float maxY = 7f;
     public float minY = -2;
+
+    private void Awake()
+    {
+        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, minY, maxY), transform.position.z);
+        transform.LookAt(target.position);
+    }
+
     private void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.W))
         {
             transform.position += transform.forward * speed * Time.fixedDeltaTime;
+            transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, minY, maxY), transform.position.z);
             transform.LookAt(target.position);
         }
         if (Input.GetKey(KeyCode.S))
         {
             transform.position += -transform.forward * speed * Time.fixedDeltaTime;
+            transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, minY, maxY), transform.position.z);
             transform.LookAt(target.position);
         }
         if (Input.GetKey(KeyCode.A))
@@ -41,7 +50,6 @@ public class CameraControls : MonoBehaviour
         if (Input.GetKey(KeyCode.E))
         {
             transform.position += -transform.up * speed * Time.fixedDeltaTime;
-            transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, minY, maxY), transform.position.z);
             transform.LookAt(target.position);
         }
     }

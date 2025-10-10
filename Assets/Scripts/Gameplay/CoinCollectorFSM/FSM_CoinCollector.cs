@@ -13,7 +13,7 @@ public class FSM_CoinCollector : MonoBehaviourExt {
 
 
     [OnAwake]
-    private void AwakeThis()
+    private void TheAwake()
     {
         Model.EventManager.AddAction("OnStartButtonClick", OnStartButtonClick);
         Model.EventManager.AddAction("OnStopButtonClick", OnStopButtonClick);
@@ -26,7 +26,7 @@ public class FSM_CoinCollector : MonoBehaviourExt {
     }
 
     [OnStart]
-    private void StartThis()
+    private void TheStart()
     {
         _fsm = new FSM();
 

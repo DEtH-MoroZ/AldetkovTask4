@@ -7,10 +7,14 @@ using UnityEngine;
 
 public class Coin : MonoBehaviourExt
 {
+    [HideInInspector]
     public Rigidbody rb;
 
+    [HideInInspector]
+    public bool registered = false;
+
     [OnAwake]
-    private void awake()
+    private void TheAwake()
     {
         gameObject.SetActive(false);
     }
@@ -18,54 +22,25 @@ public class Coin : MonoBehaviourExt
     public void Spawn()
     {
         gameObject.SetActive(true);
-        enabled = true;
-                
     }
 
 
     public void Despawn()
     {
+        registered = false;
         gameObject.SetActive(false);
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
     }
     
     //this actually needs additional testing, i guess. not the best solution
-    /*
+    
     public void OnCollisionEnter(Collision collision)
     {
-            Model.EventManager.Invoke("AddCoinToGrid", this);
-            if (transform.position.y > 3f)
-            {
-            return;
-            }
-        
-            
-            enabled = false;
-        
-    }
-    */
-    /*
-    public void FixedUpdate()
-    {
-        if (transform.position.y < 1.8f)
+        if (transform.position.y < 2f && registered == false)
         {
             Model.EventManager.Invoke("AddCoinToGrid", this);
-            enabled = false;
+            registered = true;
         }
     }
-    public void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-            Model.EventManager.Invoke("AddCoinToGrid", this);
-            enabled = false;
-        }
-
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Model.EventManager.Invoke("AddCoinToGrid", this);
-            enabled = false;
-        }
-    }*/
 }

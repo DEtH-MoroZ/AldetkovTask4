@@ -32,8 +32,8 @@ public class FSM_CC_Move : FSMState
         Model.Set("GathererInputY", vec.y);
     }
 
-    [Loop(0.15f)]
-    private void checkProxymity()
+    [Loop(0.10f)]
+    private void CheckProxymityAndDespawn()
     {
 
         Model.EventManager.Invoke(

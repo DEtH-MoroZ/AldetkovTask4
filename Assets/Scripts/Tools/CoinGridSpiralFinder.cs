@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class CoinGridSpiralFinder
+public static class CoinGridSpiralFinder //chat gpt ftw. nothing works but it was soooo beautiful :,|
 {
     // Returns first non-empty List<Coin> found in spiral order starting at (startRow, startCol),
     // or null if none found.
@@ -48,6 +48,14 @@ public static class CoinGridSpiralFinder
                     // If outside bounds, just skip counting as visited; only count valid cells
                     if (r >= 0 && r < rows && c >= 0 && c < cols)
                     {
+                        /*
+                        //if go is inactive -> remove from grid
+                        for (int l = grid[r][c].Count-1; l >= 0; l--) {
+                            if (grid[r][c][l].gameObject.activeSelf == false)
+                            {
+                                grid[r][c].RemoveAt(l);
+                            }
+                        }*/
                         cellsVisited++;
 
                         var cell = grid[r][c];
@@ -77,7 +85,7 @@ public static class CoinGridSpiralFinder
     }
 }
 
-/* chat gpt ftw. nothing works but it was soooo beautiful :,|
+/* 
 
     public static class CoinGridSpiralFinder
     {

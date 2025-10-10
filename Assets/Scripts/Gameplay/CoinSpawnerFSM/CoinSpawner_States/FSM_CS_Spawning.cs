@@ -12,10 +12,9 @@ public class FSM_CS_Spawning : FSMState
         Debug.Log("FSM_CS_Spawning");
     }
 
-    [Loop(0.2f)]
+    [Loop(0.15f)]
     void KeepSpawn()
     {
-        Model.EventManager.Invoke("SpawnCoin");
-        
+        Model.EventManager.Invoke("SpawnCoin");        
     }
 }

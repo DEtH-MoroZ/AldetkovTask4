@@ -20,10 +20,10 @@ public class FSM_CC_Idle : FSMState
         Debug.Log("FSM_CC_Idle");
     }
 
-    [Loop(0.15f)]
-    private void CheckProxymity()
+    [Loop(0.10f)]
+    private void CheckProxymityAndDespawn()
     {
-
+        
         Model.EventManager.Invoke(
             "CheckProxymityAndDespawn",
             new Vector3(

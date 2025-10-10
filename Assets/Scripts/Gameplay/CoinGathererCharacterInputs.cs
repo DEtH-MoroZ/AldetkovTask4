@@ -23,7 +23,7 @@ public class CoinGathererCharacterInputs : MonoBehaviourExtBind
     //[OnStart]
     //private void start() //this one doesnt initialize
     [OnAwake]
-    private void awake()
+    private void TheAwake()
     {
         _starterAssetsInputs = GetComponent<StarterAssetsInputs>();
     }

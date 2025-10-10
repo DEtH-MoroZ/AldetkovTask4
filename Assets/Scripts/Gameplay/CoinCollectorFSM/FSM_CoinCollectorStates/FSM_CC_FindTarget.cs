@@ -40,9 +40,9 @@ public class FSM_CC_FindTarget : FSMState
     }
 
     [OnDestroy]
-    void onDestroy ()
+    void TheDestroy ()
     {
-        Settings.Model.EventManager.RemoveAction("TargetFound", TargetFound);
-        Settings.Model.EventManager.RemoveAction("TargetNotFound", TargetNotFound);
+        Model.EventManager.RemoveAction("TargetFound", TargetFound);
+        Model.EventManager.RemoveAction("TargetNotFound", TargetNotFound);
     }
 }
