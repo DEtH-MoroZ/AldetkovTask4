@@ -7,23 +7,24 @@ using static UnityEditor.PlayerSettings;
 public class CoinGrid //class to hold information about coins. nessesarry for optimizations, that makes it all possible
 {
     float _gridSideLength = 10f;
-    float _gridStep = 0.1f; //size of on cell
+    float _gridStep = 0.2f; //size of a cell
+    readonly int _celldeviance = 2; //ammount of cells, that would be checked around target
 
     int _gridSideCellCount;
 
     private List<Coin>[][] CoinGridList;
     public CoinGrid (float gridSideLength, float gridStep)
-    {
-        _gridSideLength = gridSideLength;
+    {        
         if (gridSideLength < 0 )
         {
-            Debug.LogError("Grid Side Length must be more than zero.");
+            Debug.LogError("[CoinGrid] Grid Side Length must be more than zero.");
         }
-        _gridStep = gridStep;
+        _gridSideLength = gridSideLength;
         if (gridStep < 0)
         {
-            Debug.LogError("Grid Step must be more than zero.");
+            Debug.LogError("[CoinGrid] Grid Step must be more than zero.");
         }
+        _gridStep = gridStep;
 
         _gridSideCellCount = Mathf.FloorToInt(_gridSideLength / _gridStep);
 
@@ -53,7 +54,7 @@ public class CoinGrid //class to hold information about coins. nessesarry for op
         int coinPosX = WorldToGridIndices(coin.transform.position.x);
         int coinPosZ = WorldToGridIndices(coin.transform.position.z);
 
-        
+        /*
         for (int a = CoinGridList[coinPosX][coinPosZ].Count - 1; a >= 0; a--) //make sure to avoid duplicates
         {
             if (CoinGridList[coinPosX][coinPosZ][a].gameObject.GetInstanceID() == coin.gameObject.GetInstanceID())
@@ -62,11 +63,13 @@ public class CoinGrid //class to hold information about coins. nessesarry for op
                 return;
             }
         }
-        
+        */
         CoinGridList[coinPosX][coinPosZ].Add(coin);
     }
 
-    public void Remove(Coin coin)
+    //sooooooo. coin is registered and then rotated by gravity, it might appear on nearby grid cell. so, we have to check surroundings. lol.
+    //might be it is good idea to check rb.position instead of transform position.
+    public void Remove(Coin coin) 
     {
         if (CoinGridList == null)
         {
@@ -78,27 +81,28 @@ public class CoinGrid //class to hold information about coins. nessesarry for op
         int coinPosX = WorldToGridIndices(coin.transform.position.x);
         int coinPosZ = WorldToGridIndices(coin.transform.position.z);
 
-        //Debug.Log("remove " + coin.GetInstanceID() + " " + coin.transform.position + " " + coinPosX + " " + coinPosZ);
+        for (int a = coinPosX- _celldeviance; a < coinPosX+ _celldeviance; a++)
+        {
+            if (a < 0 || a >= CoinGridList.Length) continue;
 
-        CoinGridList[coinPosX][coinPosZ].Remove(coin);
-        coin.Despawn();        
+            for (int b = coinPosZ- _celldeviance; b < coinPosZ+ _celldeviance; b++)
+            {
+                if (b < 0 || b >= CoinGridList.Length) continue;
 
-        /*
-        for (int a = CoinGridList[coinPosX][coinPosZ].Count - 1; a >= 0; a--) {
-
-            //Debug.Log("removed " + CoinGridList[coinPosX][coinPosZ][a].GetInstanceID() + " " + CoinGridList[coinPosX][coinPosZ][a].transform.position);
-
-            if (CoinGridList[coinPosX][coinPosZ][a].gameObject.GetInstanceID() == coin.gameObject.GetInstanceID()) {
-
-                
-                CoinGridList[coinPosX][coinPosZ][a].Despawn();
-                CoinGridList[coinPosX][coinPosZ].RemoveAt(a);                                
-                
-                //Debug.Log(coin.GetInstanceID());
+                for (int c = 0; c < CoinGridList[a][b].Count; c++)
+                {                    
+                    
+                    if (CoinGridList[a][b][c].GetInstanceID() == coin.GetInstanceID())
+                    {
+                        if (a != coinPosX ||  b != coinPosZ)
+                        Debug.Log("[CoinGrid] Missplace removed " + coin.GetInstanceID() + " " + coin.transform.position + " " + coinPosX + " " + coinPosZ + " " + a + " " + b);
+                        CoinGridList[a][b][c].Despawn();
+                        CoinGridList[a][b].RemoveAt(c);
+                    }
+                    
+                }
             }
-        }
-        */
-
+        }        
     }
     public Coin findCloses(Vector3 pos)
     {
@@ -110,7 +114,7 @@ public class CoinGrid //class to hold information about coins. nessesarry for op
 
         List<Coin> found = CoinGridSpiralFinder.FindNearestCoins(CoinGridList, posX, posZ);
         if (found != null)
-        {            //if (found[0].registered == false) Debug.Log("found unregistered");
+        {            
             return found[0];
         }
         else
@@ -137,33 +141,31 @@ public class CoinGrid //class to hold information about coins. nessesarry for op
     }
 
 
-    public List<Coin> CheckProximity(float proximityHalfSize, float centerX, float centerZ)
+    public List<Coin> CheckProximity(float proximityRadius, float centerX, float centerZ)
     {
         
-        if (proximityHalfSize <= 0)
+        if (proximityRadius <= 0)
         {
-            Debug.LogError("Proximity Half Size should be greater than zero.");
+            Debug.LogError("[CoinGrid] Proximity Radius should be greater than zero.");
             return null;
         }
 
 
-        int indexHalfSize =Mathf.FloorToInt( proximityHalfSize / _gridStep);
+        int indexHalfSize =Mathf.FloorToInt(proximityRadius / _gridStep);
         int indexCenterX = WorldToGridIndices(centerX);
         int indexCenterZ = WorldToGridIndices(centerZ);
                 
         List<Coin> coinsAround = new List<Coin>();
 
         for (int a = indexCenterX - indexHalfSize; a < indexCenterX + indexHalfSize; a++)
-
-        {
-            
+        {            
             for (int b = indexCenterZ - indexHalfSize; b < indexCenterZ + indexHalfSize; b++)
             {
                 if (a < 0 ||  b < 0 || a >= CoinGridList.Length || b >= CoinGridList[a].Length)
                 {
                     continue;
                 }
-                for (int c = 0; c < CoinGridList[a][b].Count; b++)
+                for (int c = 0; c < CoinGridList[a][b].Count; c++)
                 {
                     if (CoinGridList[a][b][c])
                     {
@@ -177,6 +179,6 @@ public class CoinGrid //class to hold information about coins. nessesarry for op
 
     private int WorldToGridIndices (float value)
     {
-        return Mathf.FloorToInt((value + (_gridSideLength / 2f)) / _gridStep);         
+        return Mathf.RoundToInt((value + (_gridSideLength / 2f)) / _gridStep);         
     }
 }

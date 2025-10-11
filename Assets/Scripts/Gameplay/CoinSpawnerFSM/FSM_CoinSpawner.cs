@@ -23,9 +23,9 @@ public class FSM_CoinSpawner : MonoBehaviourExt
 	private readonly float Xarea = 10f;
 	private readonly float Zarea = 10f;
 	private readonly float height = 10f;
-	private readonly float sideStep = 0.5f;
-    private readonly float coinGridStep = 0.1f;
-    private readonly float proximitySize = 2f;
+	private readonly float sideStep = 0.5f; //distance between spawn area and its edge. nessesarry to keep objects in place
+    private readonly float coinGridStep = 0.2f;
+    private readonly float proximityRadius = 0.5f;
 
     private readonly float minTorqueMagnitude = 5f;
 	private readonly float maxTorqueMagnitude = 15f;	
@@ -99,7 +99,7 @@ public class FSM_CoinSpawner : MonoBehaviourExt
 			bumpCoin.Spawn();
 			
 			bumpCoin.rb.AddTorque(bumpVector * UnityEngine.Random.Range(minTorqueMagnitude, maxTorqueMagnitude), (ForceMode)1);
-			//coinGrid.Add(bumpCoin); //adding to grid only when collectable is on grownd
+			//coinGrid.Add(bumpCoin); 
 		}
 		else
 		{
@@ -107,8 +107,8 @@ public class FSM_CoinSpawner : MonoBehaviourExt
 		}		
 	}
 
-	private void AddCoinToGrid(Coin theCoin)
-	{
+	private void AddCoinToGrid(Coin theCoin) //adding to grid only when collectable is on grownd
+    {
 		coinGrid.Add(theCoin);
 	}
 
@@ -129,7 +129,7 @@ public class FSM_CoinSpawner : MonoBehaviourExt
 
 	private void CheckProxymityAndDespawn(Vector3 pos)
 	{
-		List<Coin> list = coinGrid.CheckProximity(proximitySize / 2f, pos.x, pos.z);
+		List<Coin> list = coinGrid.CheckProximity(proximityRadius, pos.x, pos.z);
 		if (list != null)
 		{
 			for (int i = 0; i < list.Count; i++)
@@ -146,7 +146,8 @@ public class FSM_CoinSpawner : MonoBehaviourExt
             targetCoin = null;
             Model.EventManager.Invoke("TargetReached");
         }
-        
+		if (_fsm.CurrentStateName == "FSM_CS_Idle")
+		_fsm.Change("FSM_CS_Spawning");
     }
 
     [OnDestroy]

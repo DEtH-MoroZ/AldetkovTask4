@@ -1,18 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
+using AxGrid.Base;
 using UnityEngine;
+using TMPro;
 
-public class UITextMBooleanBind : MonoBehaviour
+[RequireComponent(typeof(TextMeshProUGUI))]
+public class UITextMBooleanBind : MonoBehaviourExt
 {
-    // Start is called before the first frame update
-    void Start()
+    public string booleanToTrack = "";
+
+    public string textTrue = "";
+    public string textFalse = "";
+
+    public bool defaultEnable = true;
+
+    private TextMeshProUGUI text;
+
+    [OnAwake]
+    void TheAwake()
     {
+        text = GetComponent<TextMeshProUGUI>();
+    }
+
+    [OnStart]
+    void TheStart()
+    {
+        Model.EventManager.AddAction($"On{booleanToTrack}Changed", OnBooleanChanged);
+
+        OnBooleanChanged();
+
+    }
+
+    void OnBooleanChanged()
+    {
+        if (Model.GetBool(booleanToTrack, defaultEnable) == true) {
+            text.text = textTrue;
+        }
+        else
+        {
+            text.text = textFalse;
+        }
         
     }
 
-    // Update is called once per frame
-    void Update()
+    [OnDestroy]
+    void DestroyThis()
     {
-        
+        Model.EventManager.RemoveAction($"On{booleanToTrack}Changed", OnBooleanChanged);
     }
 }

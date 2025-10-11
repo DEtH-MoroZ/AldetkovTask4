@@ -47,6 +47,13 @@ public class FSM_CC_Move : FSMState
         
 
     }
+
+    [One(1.5f)]
+    private void OnCantReachTarget()
+    {
+        Parent.Change("FSM_CC_FindTarget");
+    }
+
     /*
     [Loop(0.05f)]
     private void TargetReached()

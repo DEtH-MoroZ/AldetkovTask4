@@ -15,17 +15,17 @@ public class GoBind : MonoBehaviourExtBind
     public bool defaultEnable = true;
 
     [OnAwake]
-    void awake()
+    void TheAwake()
     {   
         if (string.IsNullOrEmpty(gameObjectName))
-            gameObjectName = name;
+            gameObjectName = gameObject.name;
 
         enableField = enableField == "" ? $"GO{gameObjectName}Enable" : enableField;
 
     }
 
     [OnStart]
-    void start()
+    void TheStart()
     {
         Model.EventManager.AddAction($"On{enableField}Changed", OnGoEnable);
         
