@@ -34,7 +34,6 @@ namespace SceneManager_FSM
 
             _fsm.Start("FSM_SM_FirstLoadingScreen");            
             
-
             Log.Debug("[SceneManagerController] Ready");
         }
 
@@ -53,9 +52,7 @@ namespace SceneManager_FSM
         private void TheDestroy()
         {
             Model.EventManager.RemoveAction("OnMainMenuExitGameClick", OnMainMenuExitGameClick);
-        }
-
-        
+        }        
     }
 }
 
