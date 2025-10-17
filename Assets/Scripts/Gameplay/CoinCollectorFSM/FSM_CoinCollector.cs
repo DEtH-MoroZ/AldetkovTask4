@@ -23,6 +23,9 @@ public class FSM_CoinCollector : MonoBehaviourExt {
 
         Model.EventManager.AddAction("TargetReached", OnTargetReached);
 
+        Model.EventManager.AddAction("TargetFound", TargetFound);
+        Model.EventManager.AddAction("TargetNotFound", TargetNotFound);
+
     }
 
     [OnStart]
@@ -60,14 +63,29 @@ public class FSM_CoinCollector : MonoBehaviourExt {
         }
     }
 
+    private void TargetFound()
+    {
+        Debug.Log("[FSM_CC] Target found.");
+        _fsm.Change("FSM_CC_Move");
+    }
+
+    private void TargetNotFound()
+    {
+        Debug.Log("[FSM_CC] Target not found.");
+        _fsm.Change("FSM_CC_Idle");
+    }
+
     [OnDestroy]
-    public void onDestroy()
+    public void TheDestroy()
     {
         Model.EventManager.RemoveAction("OnStartButtonClick", OnStartButtonClick);
         Model.EventManager.RemoveAction("OnStopButtonClick", OnStopButtonClick);
         Model.EventManager.RemoveAction("OnRunButtonClick", OnRunButtonClick);
 
         Model.EventManager.RemoveAction("TargetReached", OnTargetReached);
+
+        Model.EventManager.RemoveAction("TargetFound", TargetFound);
+        Model.EventManager.RemoveAction("TargetNotFound", TargetNotFound);
     }
 
     [OnUpdate]

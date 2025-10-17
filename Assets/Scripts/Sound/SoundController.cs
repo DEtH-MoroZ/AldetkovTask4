@@ -39,7 +39,7 @@ public class SoundController : MonoBehaviourExt
     private void TheDestroy()
     {
         Model.EventManager.RemoveAction<Vector3>("PlayCoinDrop", PlayCoinDrop);
-        Model.EventManager.AddAction<Vector3>("PlayCoinPickUp", PlayCoinPickUp);
-        Model.EventManager.AddAction<Vector3>("PlayCoinWhoosh", PlayCoinWhoosh);
+        Model.EventManager.RemoveAction<Vector3>("PlayCoinPickUp", PlayCoinPickUp);
+        Model.EventManager.RemoveAction<Vector3>("PlayCoinWhoosh", PlayCoinWhoosh);
     }
 }

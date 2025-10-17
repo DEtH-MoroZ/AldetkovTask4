@@ -48,14 +48,14 @@ public static class CoinGridSpiralFinder //chat gpt ftw. nothing works but it wa
                     // If outside bounds, just skip counting as visited; only count valid cells
                     if (r >= 0 && r < rows && c >= 0 && c < cols)
                     {
-                        /*
+                        
                         //if go is inactive -> remove from grid
                         for (int l = grid[r][c].Count-1; l >= 0; l--) {
                             if (grid[r][c][l].gameObject.activeSelf == false)
                             {
                                 grid[r][c].RemoveAt(l);
                             }
-                        }*/
+                        }
                         cellsVisited++;
 
                         var cell = grid[r][c];

@@ -59,7 +59,7 @@ public class ScreenFader : MonoBehaviourExt
 
         if (!String.IsNullOrEmpty(onComplete))
         {
-            Debug.Log(onComplete);
+            //Debug.Log(onComplete);
             Model.EventManager.Invoke(onComplete);
         }
 
